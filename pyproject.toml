@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "tiralabra"
+version = "0.1.0"
+description = ""
+authors = ["Joacim-S <45919018+Joacim-S@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^Python 3.11.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
