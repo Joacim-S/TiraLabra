@@ -8,3 +8,4 @@
   * Aiheen ohjeessa mainitaan, että tekstiä pakatessa olisi toivottua saavuttaa puolet alkuperäisen tiedoston koosta. Pitäisikö se onnistua molemmilla algoilla yksinäänkin, vai ne yhdistämällä?
   * Onko lz78 pakkaukseni liian hidas?
 * Seuraavaksi toteutan lz78 purkamisen, jonka jälkeen selvitän, miten binääridataa manipuloidaan. Sitten voin alkaa toteuttaa Huffmanin koodausta. Testausdokumenttia aloitan myös pian.
+* Käyetty aika noin 5 tuntia
