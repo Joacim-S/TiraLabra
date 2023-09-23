@@ -1,4 +1,5 @@
 def compress(text=str):
+    '''Koodaa syötetyn merkkijonon LZ78 algoritmilla ja palauttaa koodatun jonon, jossa mukana EOF merkkinä toimiva "$"'''
     text += '$'
     output = ''
     dictionary = [(0,'')]
@@ -13,6 +14,4 @@ def compress(text=str):
         output += f'{last_match}{text[i]}'
         last_match = 0
         i+=1
-
     return output
-
