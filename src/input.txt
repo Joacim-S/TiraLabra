@@ -1,1 +1,1 @@
-Write something here to test the algorithm. With a short input like this, the output file ends up being larger than the input file.
+this is a short test text
