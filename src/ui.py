@@ -1,0 +1,6 @@
+'''Sovelluksen käyttöliittymä'''
+def start():
+    '''
+    
+    '''
+    
