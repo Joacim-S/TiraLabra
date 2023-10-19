@@ -60,7 +60,7 @@ def decompress(data):
         bin_data.append(bin(int(item))[2:].zfill(8))
     
     compressed = ''.join(bin_data)
-    dictionary = {0 : ''}
+    dictionary = ['']
     i = 0
     next_index = 1
 
@@ -69,7 +69,7 @@ def decompress(data):
     i += 1
 
     print('Puretaan...')
-    while i < len(compressed)-bits and i < len(compressed) - 8:
+    while i < len(compressed)-bits:
         previous = ''
         if bits:
             key = int(compressed[i:i+bits], 2)
@@ -77,17 +77,18 @@ def decompress(data):
             previous = dictionary[key]
 
         chr_bits = 8
-        for bit in compressed[i:]:
+        for bit in compressed[i:i+4]:
             if bit == '0':
                 break
             chr_bits += 8
 
         if chr_bits > 8:
             chr_bits -= 8
+        print(compressed[i:i+chr_bits])
         next_char = int(compressed[i:i+chr_bits], 2).to_bytes(chr_bits//8, 'big').decode()
         segment = f'{previous}{next_char}'
         output.append(segment)
-        dictionary[next_index] = segment
+        dictionary.append(segment)
         next_index += 1
         i += chr_bits
         rounds += 1
