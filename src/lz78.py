@@ -1,16 +1,22 @@
-'''LZ78 algoritmilla pakkaus ja myöhemmin purku'''
-def compress(text):
-    '''Koodaa syötetyn merkkijonon LZ78 algoritmilla'''
+'''LZ78 algoritmilla pakkaus ja purku'''
+def compress(text=str):
+    '''Pakkaa syötetyn merkkijonon LZ78 algoritmilla ja palauttaa datan tavuina'''
+    print('Pakataan...')
+    output_list = generate_output(text)
+    print('Muutetaan tavuiksi...')
+    return convert_to_bytes(output_list)
+
+def generate_output(text=str):
+    '''Pakkaa syötteen ja palauttaa pakatun datan listana'''
     last_match = 0
     next_index = 1
     i = 0
     dictionary = {(0, '') : 0}
     output = []
     bits = 0
-    rounds = 0
-    round_limit = 0.5
+    segments = 0
+    segment_limit = 0.5
     added = False
-    print('Luodaan sanakirjaa...')
     while i < len(text):
         key = (last_match, text[i])
         if key in dictionary:
@@ -25,79 +31,86 @@ def compress(text):
             if bits:
                 output.append(f'{last_match:0{bits}b}')
             char = text[i].encode()
-            for c in char:
-                output.append(bin(c)[2:].zfill(8))
+            for byte in char:
+                output.append(bin(byte)[2:].zfill(8))
             last_match = 0
             i+=1
-            rounds += 1
-            if rounds >= round_limit:
+            segments += 1
+            if segments >= segment_limit:
                 bits += 1
-                round_limit *= 2
-                rounds = 0
+                segment_limit *= 2
+                segments = 0
     if not added:
         output.append(f'{last_match:0{bits}b}')
-    print('Muutetaan tavuiksi...')
-    output_string = ''.join(output)
-    output_len = len(output_string)
-    to_next_byte = 8 - output_len % 8
+    return output
+
+
+def convert_to_bytes(data=list):
+    '''Muuttaa listana olevan datan kokonaisiksi tavuiksi'''
+    output_string = ''.join(data)
+    to_next_byte = 8 - len(output_string) % 8
     output_string_prefixed = f'{"0"*(to_next_byte-1)}1{output_string}'
     output_byte_list = []
+
     for i in range(0, len(output_string_prefixed), 8):
         output_byte_list.append(int(output_string_prefixed[i:i+8], 2))
-    
-    result = bytearray(output_byte_list)
 
-    return result
+    return bytearray(output_byte_list)
+
 
 def decompress(data):
+    '''Purkaa lz78:lla pakatun syötteen ja palauttaa alkuperäisen merkkijonon.'''
+    print('Luetaan dataa...')
+    data_string = convert_to_string(data)
     output = []
     bits = 0
-    rounds = 0
-    round_limit = 0.5
-    bin_data = []
-    print('Luetaan dataa...')
-    for item in data:
-        bin_data.append(bin(int(item))[2:].zfill(8))
-    
-    compressed = ''.join(bin_data)
+    segments = 0
+    segment_limit = 0.5
+
     dictionary = ['']
     i = 0
     next_index = 1
 
-    while compressed[i] == '0':
+    while data_string[i] == '0':
         i += 1
     i += 1
 
     print('Puretaan...')
-    while i < len(compressed)-bits:
+    while i < len(data_string)-bits:
         previous = ''
         if bits:
-            key = int(compressed[i:i+bits], 2)
+            key = int(data_string[i:i+bits], 2)
             i += bits
             previous = dictionary[key]
 
         chr_bits = 8
-        for bit in compressed[i:i+4]:
+        for bit in data_string[i:i+4]:
             if bit == '0':
                 break
             chr_bits += 8
 
         if chr_bits > 8:
             chr_bits -= 8
-        print(compressed[i:i+chr_bits])
-        next_char = int(compressed[i:i+chr_bits], 2).to_bytes(chr_bits//8, 'big').decode()
+        next_char = int(data_string[i:i+chr_bits], 2).to_bytes(chr_bits//8, 'big').decode()
         segment = f'{previous}{next_char}'
         output.append(segment)
         dictionary.append(segment)
         next_index += 1
         i += chr_bits
-        rounds += 1
-        if rounds >= round_limit:
+        segments += 1
+        if segments >= segment_limit:
             bits += 1
-            round_limit *= 2
-            rounds = 0
+            segment_limit *= 2
+            segments = 0
     print('Yhdistetään merkkijonoksi...')
-    if i < len(compressed):
-        output.append(dictionary[int(compressed[i:], 2)])
-    output_string = ''.join(output)
-    return output_string
+    if i < len(data_string):
+        output.append(dictionary[int(data_string[i:], 2)])
+    return ''.join(output)
+
+def convert_to_string(data):
+    '''Muuttaa tavuina annetun datan binääriseksi merkkijonoksi'''
+    bin_data = []
+    for item in data:
+        bin_data.append(bin(int(item))[2:].zfill(8))
+
+    return ''.join(bin_data)

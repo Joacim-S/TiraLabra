@@ -2,9 +2,10 @@
 import ui
 from datetime import datetime
 import lz78
+import filecmp
 
 def main():
-    pass
+    ui.start()
 
 def run_lz78():
     start = datetime.now()
@@ -28,6 +29,7 @@ def lz78_decompress():
         file.write(decompressed)
 
     print(datetime.now()-start)
+    print(filecmp.cmp('input.txt', 'decompressed.txt', False))
 
-run_lz78()
-lz78_decompress()
+if __name__ == '__main__':
+    main()
