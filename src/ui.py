@@ -13,17 +13,13 @@ def start():
                     ('decompress', 'purkaa tiedoston'),
                     ('compress_and_decompress', 'pakkaa ja purkaa tiedoston')]
     file_prompt = 'tiedosto:'
+    algo_prompt = 'algoritmi ("lz" tai "h", "" = molemmat):'
+
     while True:
         command = input()
         if command == 'help':
             for item in command_help:
                 print(f'{item[0]:30} - {item[1]}')
-
-        elif command == 'compress':
-            try:
-                commands.handle_compress(input(file_prompt))
-            except FileNotFoundError:
-                print('Tiedostoa ei löytynyt')
 
         elif command in ('list_input', 'list_compressed', 'list_decompressed'):
             files = commands.handle_list(command[5:])
@@ -32,7 +28,24 @@ def start():
             for file in files:
                 print(file)
 
+        elif command in ('compress', 'decompress'):
+            try:
+                file = input(file_prompt)
+                if command == 'compress':
+                    commands.file_exists(f'input/{file}')
+                    result = commands.handle_compress(file, input(algo_prompt))
+
+                elif command == 'decompress':
+                    commands.file_exists(f'output/compressed/{file}')
+                    result = commands.handle_decompress(file)
+
+                if result:
+                    print(f'suoritettu ajassa: {result}')
+                else:
+                    print('jotain meni vikaan')
+            except FileNotFoundError:
+                print('Tiedostoa ei löytynyt')
+
         else:
             print('Virheellinen komento')
             print('Kirjoita "help" jos haluat listan komennoista')
-        
