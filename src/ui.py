@@ -33,11 +33,11 @@ def start():
             try:
                 file = input(file_prompt)
                 if command == 'compress':
-                    commands.file_exists(f'input/{file}')
+                    commands.file_exists(f'./src/input/{file}')
                     result = commands.handle_compress(file, input(algo_prompt))
 
                 elif command == 'decompress':
-                    commands.file_exists(f'output/compressed/{file}')
+                    commands.file_exists(f'./src/output/compressed/{file}')
                     result = commands.handle_decompress(file)
 
                 if result:
