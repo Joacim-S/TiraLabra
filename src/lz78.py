@@ -1,10 +1,12 @@
+import convert
+
 '''LZ78 algoritmilla pakkaus ja purku'''
 def compress(text=str):
     '''Pakkaa syötetyn merkkijonon LZ78 algoritmilla ja palauttaa datan tavuina'''
     print('Pakataan...')
     output_list = generate_output(text)
     print('Muutetaan tavuiksi...')
-    return convert_to_bytes(output_list)
+    return convert.to_bytes(output_list)
 
 def generate_output(text=str):
     '''Pakkaa syötteen ja palauttaa pakatun datan listana'''
@@ -44,24 +46,10 @@ def generate_output(text=str):
         output.append(f'{last_match:0{bits}b}')
     return output
 
-
-def convert_to_bytes(data=list):
-    '''Muuttaa listana olevan datan kokonaisiksi tavuiksi'''
-    output_string = ''.join(data)
-    to_next_byte = 8 - len(output_string) % 8
-    output_string_prefixed = f'{"0"*(to_next_byte-1)}1{output_string}'
-    output_byte_list = []
-
-    for i in range(0, len(output_string_prefixed), 8):
-        output_byte_list.append(int(output_string_prefixed[i:i+8], 2))
-
-    return bytearray(output_byte_list)
-
-
 def decompress(data):
     '''Purkaa lz78:lla pakatun syötteen ja palauttaa alkuperäisen merkkijonon.'''
     print('Luetaan dataa...')
-    data_string = convert_to_string(data)
+    data_string = convert.to_string(data)
     output = []
     bits = 0
     segments = 0
@@ -107,10 +95,3 @@ def decompress(data):
         output.append(dictionary[int(data_string[i:], 2)])
     return ''.join(output)
 
-def convert_to_string(data):
-    '''Muuttaa tavuina annetun datan binääriseksi merkkijonoksi'''
-    bin_data = []
-    for item in data:
-        bin_data.append(bin(int(item))[2:].zfill(8))
-
-    return ''.join(bin_data)

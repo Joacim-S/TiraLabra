@@ -1,6 +1,8 @@
 '''Käynnistää sovelluksen'''
-import ui
 import filecmp
+
+import ui
+
 
 def main():
     ui.start()

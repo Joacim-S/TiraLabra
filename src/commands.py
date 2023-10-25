@@ -1,7 +1,10 @@
 import filecmp
 import os
-from lz78 import compress, decompress
 from datetime import datetime
+
+import convert
+from lz78 import compress, decompress
+
 
 def handle_compress(file, algo):
     start = datetime.now()

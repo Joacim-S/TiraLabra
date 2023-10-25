@@ -11,7 +11,8 @@ def start():
                     ('list_decompressed', 'listaa puretut tiedostot'),
                     ('compress', 'pakkaa tiedoston'),
                     ('decompress', 'purkaa tiedoston'),
-                    ('compress_and_decompress', 'pakkaa ja purkaa tiedoston')]
+                    ('compress_and_decompress', 'pakkaa ja purkaa tiedoston'),
+                    ('exit', 'sulkee ohjelman')]
     file_prompt = 'tiedosto:'
     algo_prompt = 'algoritmi ("lz" tai "h", "" = molemmat):'
 
@@ -45,6 +46,9 @@ def start():
                     print('jotain meni vikaan')
             except FileNotFoundError:
                 print('Tiedostoa ei löytynyt')
+        
+        elif command == 'exit':
+            break
 
         else:
             print('Virheellinen komento')
