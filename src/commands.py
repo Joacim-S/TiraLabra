@@ -8,8 +8,8 @@ from lz78 import compress, decompress
 def handle_compress(file, algo):
     start = datetime.now()
     if not algo:
-        handle_compress(file, 'lz')
-        handle_compress(file, 'h')
+        print(handle_compress(file, 'lz'))
+        print(handle_compress(file, 'h'))
         return datetime.now()-start
 
     if algo == 'lz':
