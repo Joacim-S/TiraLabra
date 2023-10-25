@@ -17,3 +17,22 @@ def to_string(data):
         bin_data.append(bin(int(item))[2:].zfill(8))
 
     return ''.join(bin_data)
+
+def get_start_of_data(data_string):
+    i = 0
+    while data_string[i] == '0':
+        i += 1
+    i += 1
+    return i
+
+def get_char_length(bits):
+    chr_bits = 8
+    for bit in bits:
+        if bit == '0':
+            break
+        chr_bits += 8
+
+    if chr_bits > 8:
+        chr_bits -= 8
+        
+    return chr_bits

@@ -1,4 +1,4 @@
-import convert
+import tools
 
 '''LZ78 algoritmilla pakkaus ja purku'''
 def compress(text=str):
@@ -6,7 +6,7 @@ def compress(text=str):
     print('Pakataan...')
     output_list = generate_output(text)
     print('Muutetaan tavuiksi...')
-    return convert.to_bytes(output_list)
+    return tools.to_bytes(output_list)
 
 def generate_output(text=str):
     '''Pakkaa syötteen ja palauttaa pakatun datan listana'''
@@ -49,19 +49,15 @@ def generate_output(text=str):
 def decompress(data):
     '''Purkaa lz78:lla pakatun syötteen ja palauttaa alkuperäisen merkkijonon.'''
     print('Luetaan dataa...')
-    data_string = convert.to_string(data)
+    data_string = tools.to_string(data)
     output = []
     bits = 0
     segments = 0
     segment_limit = 0.5
 
     dictionary = ['']
-    i = 0
+    i = tools.get_start_of_data(data_string)
     next_index = 1
-
-    while data_string[i] == '0':
-        i += 1
-    i += 1
 
     print('Puretaan...')
     while i < len(data_string)-bits:
@@ -71,14 +67,7 @@ def decompress(data):
             i += bits
             previous = dictionary[key]
 
-        chr_bits = 8
-        for bit in data_string[i:i+4]:
-            if bit == '0':
-                break
-            chr_bits += 8
-
-        if chr_bits > 8:
-            chr_bits -= 8
+        chr_bits = tools.get_char_length(data_string[i:i+4])
         next_char = int(data_string[i:i+chr_bits], 2).to_bytes(chr_bits//8, 'big').decode()
         segment = f'{previous}{next_char}'
         output.append(segment)
