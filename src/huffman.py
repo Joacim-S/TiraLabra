@@ -6,10 +6,11 @@ import tools
 
 class Huffman:
     '''Huffmanin koodauksesta vastaava luokka'''
+
     def __init__(self):
         self._output_list = []
         self._i = 0
-    
+
     def compress(self, text=str):
         '''Pakkaa syötetyn merkkijonon Huffmanin koodauksella ja palauttaa datan tavuina'''
         self._output_list = []
@@ -32,7 +33,7 @@ class Huffman:
         result = ''.join(self._output_list)
         self._output_list = []
         return result
-        
+
     def _decode(self, data_string, root):
         node = root
         for bit in data_string:
@@ -49,7 +50,8 @@ class Huffman:
         self._i += 1
         if bit == '1':
             chr_bits = tools.get_char_length(data_string[self._i:self._i+4])
-            node.char = int(data_string[self._i:self._i+chr_bits], 2).to_bytes(chr_bits//8, 'big').decode()
+            node.char = int(
+                data_string[self._i:self._i+chr_bits], 2).to_bytes(chr_bits//8, 'big').decode()
             self._i += chr_bits
             return node
         if bit == '0':
@@ -109,8 +111,10 @@ class Huffman:
         for char in text:
             self._output_list.append(encodings[char])
 
+
 class Node:
     '''Puun solmuista vastaava luokka'''
+
     def __init__(self, value=0, char=None, left=None, right=None):
         self.value = value
         self.char = char
@@ -119,6 +123,6 @@ class Node:
 
     def __str__(self):
         return str(self.char)
-        
+
     def __gt__(self, other):
         return self.value > other.value

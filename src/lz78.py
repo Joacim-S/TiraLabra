@@ -1,6 +1,8 @@
 import tools
 
 '''LZ78 algoritmilla pakkaus ja purku'''
+
+
 class Lz78:
     def __init__(self):
         pass
@@ -11,7 +13,7 @@ class Lz78:
         output_list = self._generate_output(text)
         print('Muutetaan tavuiksi...')
         return tools.to_bytes(output_list)
-    
+
     def decompress(self, data):
         '''Purkaa lz78:lla pakatun syötteen ja palauttaa alkuperäisen merkkijonon.'''
         print('Luetaan dataa...')
@@ -34,7 +36,8 @@ class Lz78:
                 previous = dictionary[key]
 
             chr_bits = tools.get_char_length(data_string[i:i+4])
-            next_char = int(data_string[i:i+chr_bits], 2).to_bytes(chr_bits//8, 'big').decode()
+            next_char = int(data_string[i:i+chr_bits],
+                            2).to_bytes(chr_bits//8, 'big').decode()
             segment = f'{previous}{next_char}'
             output.append(segment)
             dictionary.append(segment)
@@ -55,7 +58,7 @@ class Lz78:
         last_match = 0
         next_index = 1
         i = 0
-        dictionary = {(0, '') : 0}
+        dictionary = {(0, ''): 0}
         output = []
         bits = 0
         segments = 0
@@ -78,7 +81,7 @@ class Lz78:
                 for byte in char:
                     output.append(bin(byte)[2:].zfill(8))
                 last_match = 0
-                i+=1
+                i += 1
                 segments += 1
                 if segments >= segment_limit:
                     bits += 1
@@ -87,6 +90,3 @@ class Lz78:
         if not added:
             output.append(f'{last_match:0{bits}b}')
         return output
-
-
-

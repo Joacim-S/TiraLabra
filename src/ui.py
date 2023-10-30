@@ -1,6 +1,6 @@
+'''Sovelluksen käyttöliittymä'''
 import commands
 
-'''Sovelluksen käyttöliittymä'''
 def start():
     '''
     Sovelluksen käyttöliittymä
@@ -46,7 +46,7 @@ def start():
                     print('jotain meni vikaan')
             except FileNotFoundError:
                 print('Tiedostoa ei löytynyt')
-        
+
         elif command == 'exit':
             break
 

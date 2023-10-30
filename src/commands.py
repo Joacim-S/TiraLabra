@@ -1,9 +1,11 @@
+'''Suorittaa käyttäjän syöttämät komennot'''
 import filecmp
 import os
 from datetime import datetime
 
 from huffman import Huffman
 from lz78 import Lz78
+
 
 def handle_compress(file, algo):
     start = datetime.now()
@@ -18,7 +20,7 @@ def handle_compress(file, algo):
             string = input_file.read()
         compressed_data = lz.compress(string)
         filename = file.split('.')[0]
-        with open(f'./src/output/compressed/{filename}_lz.bin','wb') as output_file:
+        with open(f'./src/output/compressed/{filename}_lz.bin', 'wb') as output_file:
             output_file.write(compressed_data)
         return datetime.now()-start
 
@@ -28,12 +30,12 @@ def handle_compress(file, algo):
             string = input_file.read()
         compressed_data = h.compress(string)
         filename = file.split('.')[0]
-        with open(f'./src/output/compressed/{filename}_h.bin','wb') as output_file:
+        with open(f'./src/output/compressed/{filename}_h.bin', 'wb') as output_file:
             output_file.write(compressed_data)
         return datetime.now()-start
 
     print('virheellinen algo komento')
-    
+
 
 def handle_decompress(file):
     start = datetime.now()
@@ -47,19 +49,20 @@ def handle_decompress(file):
     elif file.endswith('_h.bin'):
         h = Huffman()
         decompressed = h.decompress(data)
-        
+
     filename = file.split('.')[0]
     with open(f'./src/output/decompressed/{filename}.txt', 'w') as output_file:
         output_file.write(decompressed)
 
     return datetime.now()-start
 
+
 def handle_list(dir):
     if dir == 'input':
         return os.listdir(f'./src/{dir}')
     return os.listdir(f'./src/output/{dir}')
 
+
 def file_exists(file):
     with open(file) as text_file:
         return True
-    
