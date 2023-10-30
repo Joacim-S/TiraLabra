@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 from huffman import Huffman
-from lz78 import compress, decompress
+from lz78 import Lz78
 
 def handle_compress(file, algo):
     start = datetime.now()
@@ -13,9 +13,10 @@ def handle_compress(file, algo):
         return datetime.now()-start
 
     if algo == 'lz':
+        lz = Lz78()
         with open(f'./src/input/{file}') as input_file:
             string = input_file.read()
-        compressed_data = compress(string)
+        compressed_data = lz.compress(string)
         filename = file.split('.')[0]
         with open(f'./src/output/compressed/{filename}_lz.bin','wb') as output_file:
             output_file.write(compressed_data)
@@ -40,7 +41,8 @@ def handle_decompress(file):
         data = data_file.read()
 
     if file.endswith('_lz.bin'):
-        decompressed = decompress(data)
+        lz = Lz78()
+        decompressed = lz.decompress(data)
 
     elif file.endswith('_h.bin'):
         h = Huffman()
