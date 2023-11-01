@@ -3,6 +3,7 @@ import unittest
 
 import tools
 
+
 class Testtools(unittest.TestCase):
     '''Testaa tools moduulia.'''
 

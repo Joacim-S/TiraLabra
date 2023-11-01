@@ -11,30 +11,44 @@ class Huffman:
         self._output_list = []
         self._i = 0
 
-    def compress(self, text=str):
-        '''Pakkaa syötetyn merkkijonon Huffmanin koodauksella ja palauttaa datan tavuina'''
-        self._output_list = []
+    def compress(self, text: str):
+        '''Pakkaa syötteen Huffmanin koodauksella
+
+        Args:
+            text (str): pakattava merkkijono
+
+        Returns:
+            bytearray: Pakattu data tavuina
+        '''
         frequencies = self._get_frequencies(text)
         heap = self._get_heap(frequencies)
         tree = self._get_tree(heap)
         encodings = self._get_encodings(tree, {})
         self._encode(text, encodings)
-        result = tools.to_bytes(self._output_list)
-        self._output_list = []
-        return result
+        return tools.to_bytes(self._output_list)
 
-    def decompress(self, data):
-        '''Huffmanin koodauksen purku'''
-        self._output_list = []
+    def decompress(self, data: str):
+        '''Purkaa Huffman koodatun syötteen
+
+        Args:
+            data (str): purettava data
+
+        Returns:
+            str: Purettu merkkijono
+        '''
         data_string = tools.to_string(data)
         self._i = tools.get_start_of_data(data_string)
         root = self._reconstruct_tree(Node(), data_string)
         self._decode(data_string[self._i:], root)
-        result = ''.join(self._output_list)
-        self._output_list = []
-        return result
+        return ''.join(self._output_list)
 
-    def _decode(self, data_string, root):
+    def _decode(self, data_string: str, root: object):
+        '''Purkaa Huffman koodauksen
+
+        Args:
+            data_string (str): Huffman koodattu merkkijono
+            root (object): Huffman puun juuri
+        '''
         node = root
         for bit in data_string:
             if bit == '0' and node.left:
@@ -45,7 +59,16 @@ class Huffman:
                 self._output_list.append(node.char)
                 node = root
 
-    def _reconstruct_tree(self, node, data_string):
+    def _reconstruct_tree(self, node: object, data_string: str):
+        '''Rakentaa Huffman koodauksessa käytetyn puun
+
+        Args:
+            node (object): Käsiteltävä solmu
+            data_string (str): Merkkijono, jonka alussa puun rakennusohja
+
+        Returns:
+            object: Käsitelty solmu
+        '''
         bit = data_string[self._i]
         self._i += 1
         if bit == '1':
@@ -54,15 +77,22 @@ class Huffman:
                 data_string[self._i:self._i+chr_bits], 2).to_bytes(chr_bits//8, 'big').decode()
             self._i += chr_bits
             return node
-        if bit == '0':
-            node.left = Node()
-            self._reconstruct_tree(node.left, data_string)
-            node.right = Node()
-            self._reconstruct_tree(node.right, data_string)
-            return node
 
-    def _get_frequencies(self, text=str):
-        '''Muodostaa sanakirjan merkkien frekvenssistä merkkijonossa'''
+        node.left = Node()
+        self._reconstruct_tree(node.left, data_string)
+        node.right = Node()
+        self._reconstruct_tree(node.right, data_string)
+        return node
+
+    def _get_frequencies(self, text: str):
+        '''Laskee merkkien esiintymiskerrat syötteessä
+
+        Args:
+            text (str): Käsiteltävä merkkijono
+
+        Returns:
+            dict: Sanakirja merkki:esiintymiskerrat pareista
+        '''
         frequencies = {}
         for char in text:
             if char not in frequencies:
@@ -71,8 +101,15 @@ class Huffman:
                 frequencies[char] += 1
         return frequencies
 
-    def _get_heap(self, frequencies):
-        '''Muodostaa pinon lehtiä syötetyistä merkki frekvenssi pareista'''
+    def _get_heap(self, frequencies: dict):
+        '''Muodostaa minipinon solmuja merkeistä ja niiden esiintymiskerroista
+
+        Args:
+            frequencies (dict): Merkki:esiintymiskerrat sanakirja
+
+        Returns:
+            heap: Pino solmuja merkeistä ja niiden esiintymiskerroista
+        '''
         f_list = []
         for char, freq in frequencies.items():
             f_list.append(Node(freq, char))
@@ -80,8 +117,17 @@ class Huffman:
 
         return f_list
 
-    def _get_encodings(self, root, dictionary, encoding=''):
-        '''Hakee merkkien koodaukset muodostetusta Huffmanin puusta'''
+    def _get_encodings(self, root: object, dictionary: dict, encoding: str = ''):
+        '''Hakee merkkien koodaukse
+
+        Args:
+            root (object): Huffman puun juuri
+            dictionary (dict): merkki:koodaus sanakirja
+            encoding (str, optional): Merkin koodauksen aiemmat merkit. Defaults to ''.
+
+        Returns:
+            dict: valmis merkki:koodaus sanakirja
+        '''
         if root.char:
             self._output_list.append('1')
             char = root.char.encode()
@@ -99,7 +145,14 @@ class Huffman:
         return dictionary
 
     def _get_tree(self, heap):
-        '''Muodostaa Huffmanin puun syötetystä pinosta. Palauttaa juuren'''
+        '''Muodostaa Huffman puun solmupinosta
+
+        Args:
+            heap (heap): Pino solmuja
+
+        Returns:
+            object: Huffman puun juuri
+        '''
         while len(heap) > 1:
             left = heapq.heappop(heap)
             right = heapq.heappop(heap)

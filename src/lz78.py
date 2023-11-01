@@ -1,21 +1,35 @@
+'''LZ78 algoritmilla pakkaus ja purku'''
 import tools
 
-'''LZ78 algoritmilla pakkaus ja purku'''
-
-
 class Lz78:
+    '''Lz78:sta vastaava luokka
+    '''
     def __init__(self):
         pass
 
-    def compress(self, text=str):
-        '''Pakkaa syötetyn merkkijonon LZ78 algoritmilla ja palauttaa datan tavuina'''
+    def compress(self, text: str):
+        '''Pakkaa merkkijonon
+
+        Args:
+            text (str): Pakattava merkkijono
+
+        Returns:
+            bytearray: Pakattu data
+        '''
         print('Pakataan...')
         output_list = self._generate_output(text)
         print('Muutetaan tavuiksi...')
         return tools.to_bytes(output_list)
 
     def decompress(self, data):
-        '''Purkaa lz78:lla pakatun syötteen ja palauttaa alkuperäisen merkkijonon.'''
+        '''Purkaa lz78 pakatun datan
+
+        Args:
+            data (str): Pakkauksen tuottama binäärimerkkijono
+
+        Returns:
+            str: Alkuperäinen merkkijono
+        '''
         print('Luetaan dataa...')
         data_string = tools.to_string(data)
         output = []
@@ -53,8 +67,15 @@ class Lz78:
             output.append(dictionary[int(data_string[i:], 2)])
         return ''.join(output)
 
-    def _generate_output(self, text=str):
-        '''Pakkaa syötteen ja palauttaa pakatun datan listana'''
+    def _generate_output(self, text: str):
+        '''Pakkaa syötteen
+
+        Args:
+            text (str): Pakattava merkkijono
+
+        Returns:
+            list: Pakattu binäärimerkkijono listana
+        '''
         last_match = 0
         next_index = 1
         i = 0

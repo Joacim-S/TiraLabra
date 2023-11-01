@@ -1,6 +1,7 @@
 '''Sovelluksen käyttöliittymä'''
 import commands
 
+
 def start():
     '''
     Sovelluksen käyttöliittymä
