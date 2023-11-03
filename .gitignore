@@ -1,8 +1,8 @@
 __pycache__
 .pytest_cache
-test_files
+src/test_files/*
 .coverage
 htmlcov
-input/*
-output/compressed/*
-output/decompressed/*
+src/input/*
+src/output/compressed/*
+src/output/decompressed/*
