@@ -20,6 +20,8 @@ class Huffman:
         Returns:
             bytearray: Pakattu data tavuina
         '''
+        if len(text) == 0:
+            return tools.to_bytes(text)
         frequencies = self._get_frequencies(text)
         heap = self._get_heap(frequencies)
         tree = self._get_tree(heap)
@@ -38,6 +40,8 @@ class Huffman:
         '''
         data_string = tools.to_string(data)
         self._i = tools.get_start_of_data(data_string)
+        if self._i >= len(data_string):
+            return ''.join(self._output_list)
         root = self._reconstruct_tree(Node(), data_string)
         self._decode(data_string[self._i:], root)
         return ''.join(self._output_list)

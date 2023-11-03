@@ -18,7 +18,7 @@ def handle_compress_and_decompress(file: str, algo: str):
             filename = f'{file.split(".")[0]}_h.bin'
             print(
                 f'Huffman purku suoritettu ajassa {handle_decompress(filename)}')
-            print(i//len(files))
+            print(f'{i}/{len(files)-1} tiedostoa valmiina')
     return datetime.now() - start
 
 
