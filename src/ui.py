@@ -42,9 +42,10 @@ def start():
                     commands.file_exists(file, command)
                 except FileNotFoundError:
                     print('Tiedostoa ei löytynyt')
+                    continue
                     
             if command == 'decompress':
-                commands.handle_decompress(file)
+                result = commands.handle_decompress(file)
             else:
                 func = getattr(commands, f'handle_{command}')
                 result = func(file, input(algo_prompt))

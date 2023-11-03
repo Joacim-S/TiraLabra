@@ -101,9 +101,14 @@ def handle_list(direc: str):
         list: Tiedostonimet
     '''
     if direc == 'input':
-        return os.listdir(f'./src/{direc}')
-    return os.listdir(f'./src/output/{direc}')
-
+        files = os.listdir(f'./src/{direc}')
+    else:
+        files = os.listdir(f'./src/output/{direc}')
+    non_hiddens = []
+    for file in files:
+        if not file.startswith('.'):
+            non_hiddens.append(file)
+    return non_hiddens
 
 def file_exists(file: str, command: str):
     '''Tarkistaa, löytyykö tiedostoa
@@ -116,7 +121,7 @@ def file_exists(file: str, command: str):
         bool: True, jos tiedosto löytyy
     '''
     if command == 'decompress':
-        with open(f'./src/output/decompressed{file}'):
+        with open(f'./src/output/decompressed/{file}'):
             return True
 
     with open(f'./src/input/{file}'):
