@@ -3,3 +3,6 @@ __pycache__
 test_files
 .coverage
 htmlcov
+input/*
+output/compressed/*
+output/decompressed/*

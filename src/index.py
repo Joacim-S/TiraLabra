@@ -1,6 +1,7 @@
 '''Käynnistää sovelluksen'''
 import ui
 
+
 def main():
     '''Käynnistää käyttöliittymän
     '''

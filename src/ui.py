@@ -14,11 +14,15 @@ def start():
                     ('decompress', 'purkaa tiedoston'),
                     ('compress_and_decompress', 'pakkaa ja purkaa tiedoston'),
                     ('exit', 'sulkee ohjelman')]
-    file_prompt = 'tiedosto:'
+    file_prompt = 'tiedosto ("" = kaikki):'
     algo_prompt = 'algoritmi ("lz" tai "h", "" = molemmat):'
 
     while True:
         command = input()
+
+        if command == 'exit':
+            break
+
         if command == 'help':
             for item in command_help:
                 print(f'{item[0]:30} - {item[1]}')
@@ -30,26 +34,22 @@ def start():
             for file in files:
                 print(file)
 
-        elif command in ('compress', 'decompress'):
-            try:
-                file = input(file_prompt)
-                if command == 'compress':
-                    commands.file_exists(f'./src/input/{file}')
-                    result = commands.handle_compress(file, input(algo_prompt))
-
-                elif command == 'decompress':
-                    commands.file_exists(f'./src/output/compressed/{file}')
-                    result = commands.handle_decompress(file)
-
-                if result:
-                    print(f'suoritettu ajassa: {result}')
-                else:
-                    print('jotain meni vikaan')
-            except FileNotFoundError:
-                print('Tiedostoa ei löytynyt')
-
-        elif command == 'exit':
-            break
+        elif command in ('compress', 'decompress', 'compress_and_decompress'):
+            file = input(file_prompt)
+            
+            if file:
+                try:
+                    commands.file_exists(file, command)
+                except FileNotFoundError:
+                    print('Tiedostoa ei löytynyt')
+                    
+            if command == 'decompress':
+                commands.handle_decompress(file)
+            else:
+                func = getattr(commands, f'handle_{command}')
+                result = func(file, input(algo_prompt))
+    
+            print(f'suoritettu ajassa: {result}')
 
         else:
             print('Virheellinen komento')

@@ -1,10 +1,25 @@
 '''Suorittaa käyttäjän syöttämät komennot'''
-# import filecmp
 import os
 from datetime import datetime
 
 from huffman import Huffman
 from lz78 import Lz78
+
+
+def handle_compress_and_decompress(file: str, algo: str):
+    start = datetime.now()
+    if not file:
+        files = handle_list('input')
+        for i, file in enumerate(files):
+            print(f'Pakkaus suoritettu ajassa {handle_compress(file, algo)}')
+            filename = f'{file.split(".")[0]}_lz.bin'
+            print(
+                f'Lz78 purku suoritettu ajassa {handle_decompress(filename)}')
+            filename = f'{file.split(".")[0]}_h.bin'
+            print(
+                f'Huffman purku suoritettu ajassa {handle_decompress(filename)}')
+            print(i//len(files))
+    return datetime.now() - start
 
 
 def handle_compress(file: str, algo: str):
@@ -19,8 +34,9 @@ def handle_compress(file: str, algo: str):
     '''
     start = datetime.now()
     if not algo:
-        print(handle_compress(file, 'lz'))
-        print(handle_compress(file, 'h'))
+        print(f' lz78 pakkaus suoritettu ajassa {handle_compress(file, "lz")}')
+        print(
+            f' Huffman koodaus suoritettu ajassa {handle_compress(file, "h")}')
         return datetime.now()-start
 
     if algo == 'lz':
@@ -89,14 +105,19 @@ def handle_list(direc: str):
     return os.listdir(f'./src/output/{direc}')
 
 
-def file_exists(file: str):
+def file_exists(file: str, command: str):
     '''Tarkistaa, löytyykö tiedostoa
 
     Args:
         file (str): Tiedoston sijainti ja nimi
+        command (str): Käyttäjän syöttämä komento
 
     Returns:
-        Bool: True, jos tiedosto löytyy
+        bool: True, jos tiedosto löytyy
     '''
-    with open(file):
+    if command == 'decompress':
+        with open(f'./src/output/decompressed{file}'):
+            return True
+
+    with open(f'./src/input/{file}'):
         return True

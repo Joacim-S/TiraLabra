@@ -1,9 +1,11 @@
 '''LZ78 algoritmilla pakkaus ja purku'''
 import tools
 
+
 class Lz78:
     '''Lz78:sta vastaava luokka
     '''
+
     def __init__(self):
         pass
 
