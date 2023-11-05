@@ -28,3 +28,9 @@ Nyt tiedostopolut on kovakoodattu.
 
 ## Laajojen kielimallien käyttö
 En käyttänyt laajoja kielimalleja lainkaaan.
+
+## Lähteet
+* https://fi.wikipedia.org/wiki/Huffmanin_koodaus
+* https://en.wikipedia.org/wiki/Huffman_coding
+* https://en.wikipedia.org/wiki/LZ77_and_LZ78
+* https://math.mit.edu/~goemans/18310S15/lempel-ziv-notes.pdf
