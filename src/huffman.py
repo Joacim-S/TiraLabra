@@ -20,6 +20,7 @@ class Huffman:
         Returns:
             bytearray: Pakattu data tavuina
         '''
+        self._output_list = []
         if len(text) == 0:
             return tools.to_bytes(text)
         frequencies = self._get_frequencies(text)
@@ -38,6 +39,7 @@ class Huffman:
         Returns:
             str: Purettu merkkijono
         '''
+        self._output_list = []
         data_string = tools.to_string(data)
         self._i = tools.get_start_of_data(data_string)
         if self._i >= len(data_string):
@@ -122,7 +124,7 @@ class Huffman:
         return f_list
 
     def _get_encodings(self, root: object, dictionary: dict, encoding: str = ''):
-        '''Hakee merkkien koodaukse
+        '''Hakee merkkien koodaukset ja tallentaa puun output_listiin
 
         Args:
             root (object): Huffman puun juuri
@@ -177,9 +179,6 @@ class Node:
         self.char = char
         self.left = left
         self.right = right
-
-    def __str__(self):
-        return str(self.char)
 
     def __gt__(self, other):
         return self.value > other.value
