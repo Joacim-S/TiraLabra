@@ -5,3 +5,9 @@ Sovellus osaa pakata ja purkaa txt näillä kahdella algoritmilla, sekä pakates
 * [Määrittelydokumentti](https://github.com/Joacim-S/TiraLabra/blob/main/dokumentaatio/m%C3%A4%C3%A4rittelydokumentti.md)
 * [Toteutusdokumentti](https://github.com/Joacim-S/TiraLabra/blob/main/dokumentaatio/toteutusdokumentti.md)
 * [Testausdokumentti](https://github.com/Joacim-S/TiraLabra/blob/main/dokumentaatio/Testausdokumentti.md)
+### Viikkoraportit
+[Viikko1](https://github.com/Joacim-S/TiraLabra/blob/main/dokumentaatio/Viikkoraportti1.md)
+
+[Viikko3](https://github.com/Joacim-S/TiraLabra/blob/main/dokumentaatio/viikkoraportti3.md)
+
+[Viikko4](https://github.com/Joacim-S/TiraLabra/blob/main/dokumentaatio/viikkoraportti4.md)
