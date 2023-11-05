@@ -6,7 +6,7 @@ authors = ["Joacim-S <45919018+Joacim-S@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11.3"
+python = "^3.9"
 invoke = "^2.2.0"
 
 
