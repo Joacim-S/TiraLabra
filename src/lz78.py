@@ -18,9 +18,7 @@ class Lz78:
         Returns:
             bytearray: Pakattu data
         '''
-        print('Pakataan...')
         output_list = self._generate_output(text)
-        print('Muutetaan tavuiksi...')
         return tools.to_bytes(output_list)
 
     def decompress(self, data):
@@ -32,7 +30,6 @@ class Lz78:
         Returns:
             str: Alkuperäinen merkkijono
         '''
-        print('Luetaan dataa...')
         data_string = tools.to_string(data)
         output = []
         bits = 0
@@ -43,7 +40,6 @@ class Lz78:
         i = tools.get_start_of_data(data_string)
         next_index = 1
 
-        print('Puretaan...')
         while i < len(data_string)-bits:
             previous = ''
             if bits:
@@ -64,7 +60,6 @@ class Lz78:
                 bits += 1
                 segment_limit *= 2
                 segments = 0
-        print('Yhdistetään merkkijonoksi...')
         if i < len(data_string):
             output.append(dictionary[int(data_string[i:], 2)])
         return ''.join(output)

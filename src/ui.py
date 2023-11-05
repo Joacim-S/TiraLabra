@@ -11,8 +11,8 @@ def start():
                     ('list_compressed', 'listaa pakatut tiedostot'),
                     ('list_decompressed', 'listaa puretut tiedostot'),
                     ('compress', 'pakkaa tiedoston'),
+                    ('compress_stats', 'Pakkaa tiedostot ja tallentaa tilastot'),
                     ('decompress', 'purkaa tiedoston'),
-                    ('compress_and_decompress', 'pakkaa ja purkaa tiedoston'),
                     ('exit', 'sulkee ohjelman')]
     file_prompt = 'tiedosto ("" = kaikki):'
     algo_prompt = 'algoritmi ("lz" tai "h", "" = molemmat):'
@@ -34,22 +34,29 @@ def start():
             for file in files:
                 print(file)
 
-        elif command in ('compress', 'decompress', 'compress_and_decompress'):
+        elif command == 'compress_stats':
+            print(f'suoritettu ajassa: {commands.handle_compress_stats()}')
+
+        elif command in ('compress', 'decompress'):
             file = input(file_prompt)
-            
+
             if file:
                 try:
                     commands.file_exists(file, command)
                 except FileNotFoundError:
                     print('Tiedostoa ei löytynyt')
                     continue
-                    
+                if command == 'compress':
+                    result = commands.handle_compress(
+                        file, input(algo_prompt))[0]
+                    print(f'suoritettu ajassa: {result}')
+                    continue
+
             if command == 'decompress':
                 result = commands.handle_decompress(file)
             else:
-                func = getattr(commands, f'handle_{command}')
-                result = func(file, input(algo_prompt))
-    
+                result = commands.handle_compress(file, input(algo_prompt))
+
             print(f'suoritettu ajassa: {result}')
 
         else:

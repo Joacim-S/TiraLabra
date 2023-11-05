@@ -1,42 +1,66 @@
 '''Suorittaa käyttäjän syöttämät komennot'''
 import os
+import csv
 from datetime import datetime
 
 from huffman import Huffman
 from lz78 import Lz78
 
 
-def handle_compress_and_decompress(file: str, algo: str):
-    start = datetime.now()
-    if not file:
-        files = handle_list('input')
-        for i, file in enumerate(files):
-            print(f'Pakkaus suoritettu ajassa {handle_compress(file, algo)}')
-            filename = f'{file.split(".")[0]}_lz.bin'
-            print(
-                f'Lz78 purku suoritettu ajassa {handle_decompress(filename)}')
-            filename = f'{file.split(".")[0]}_h.bin'
-            print(
-                f'Huffman purku suoritettu ajassa {handle_decompress(filename)}')
-            print(f'{i}/{len(files)-1} tiedostoa valmiina')
-    return datetime.now() - start
+def handle_compress_stats():
+    '''Luo tilastotiedoston ja kutsuu hande_compress funktiota
+
+    Returns:
+        object: Suoritusaika
+    '''
+    num = 0
+    while True:
+        try:
+            with open(f'./src/output/stats/stats_{num}.csv', 'x', encoding='utf-8') as stat_file:
+                break
+        except FileExistsError:
+            num += 1
+    with open(f'./src/output/stats/stats_{num}.csv', 'a', encoding='utf-8') as stat_file:
+        writer = csv.writer(stat_file)
+        writer.writerow(['file', 'original', 'LZ78', 'Huffman', 'LZ78_wins'])
+    return handle_compress(stats=f'stats_{num}.csv')
 
 
-def handle_compress(file: str, algo: str):
+def handle_compress(file: str = '', algo: str = '', stats: str = ''):
     '''Käsittelee pakkauskomennon
 
     Args:
         file (str): Pakattavan tiedoston nimi
         algo (str): Algoritmin lyhenne
+        stats (str): Tiedosto, johon tilastot kirjoitetaan. '' = ei luoda tilastoa
 
     Returns:
         object or str: Suoritusaika tai virheilmoitus
     '''
+    if algo and algo not in ('lz', 'h'):
+        print('virheellinen komento')
+        return 0
+
     start = datetime.now()
+    if not file:
+        files = handle_list('input')
+        for i, fil in enumerate(files):
+            print(
+                f'Pakkaus suoritettu ajassa {handle_compress(fil, algo, stats)}')
+            print(f'{i+1}/{len(files)} tiedostoa käsitelty')
+        return datetime.now()-start
+
     if not algo:
-        print(f' lz78 pakkaus suoritettu ajassa {handle_compress(file, "lz")}')
-        print(
-            f' Huffman koodaus suoritettu ajassa {handle_compress(file, "h")}')
+        lz_result = handle_compress(file, "lz")
+        print(f'lz78 pakkaus suoritettu ajassa {lz_result[0]}')
+        h_result = handle_compress(file, "h")
+        print(f'Huffman koodaus suoritettu ajassa {h_result[0]}')
+        if stats:
+            og_size = os.stat(f'./src/input/{file}').st_size
+            with open(f'./src/output/stats/{stats}', 'a') as stat_file:
+                writer = csv.writer(stat_file)
+                writer.writerow([file, og_size, f'{(lz_result[1]/og_size):.2f}',
+                                f'{(h_result[1]/og_size):.2f}', lz_result[1] <= h_result[1]])
         return datetime.now()-start
 
     if algo == 'lz':
@@ -47,19 +71,16 @@ def handle_compress(file: str, algo: str):
         filename = file.split('.')[0]
         with open(f'./src/output/compressed/{filename}_lz.bin', 'wb') as output_file:
             output_file.write(compressed_data)
-        return datetime.now()-start
+        return datetime.now()-start, os.stat(f'./src/output/compressed/{filename}_lz.bin').st_size
 
-    if algo == 'h':
-        huf = Huffman()
-        with open(f'./src/input/{file}', encoding='utf-8') as input_file:
-            string = input_file.read()
-        compressed_data = huf.compress(string)
-        filename = file.split('.')[0]
-        with open(f'./src/output/compressed/{filename}_h.bin', 'wb') as output_file:
-            output_file.write(compressed_data)
-        return datetime.now()-start
-
-    return 'virheellinen algo komento'
+    huf = Huffman()
+    with open(f'./src/input/{file}', encoding='utf-8') as input_file:
+        string = input_file.read()
+    compressed_data = huf.compress(string)
+    filename = file.split('.')[0]
+    with open(f'./src/output/compressed/{filename}_h.bin', 'wb') as output_file:
+        output_file.write(compressed_data)
+    return datetime.now()-start, os.stat(f'./src/output/compressed/{filename}_h.bin').st_size
 
 
 def handle_decompress(file: str):
@@ -73,6 +94,14 @@ def handle_decompress(file: str):
     '''
 
     start = datetime.now()
+
+    if not file:
+        files = handle_list('compressed')
+        for i, fil in enumerate(files):
+            print(f'Purku suoritettu ajassa {handle_decompress(fil)}')
+            print(f'{i+1}/{len(files)} tiedostoa käsitelty')
+        return datetime.now()-start
+
     with open(f'./src/output/compressed/{file}', 'rb') as data_file:
         data = data_file.read()
 
@@ -109,6 +138,7 @@ def handle_list(direc: str):
         if not file.startswith('.'):
             non_hiddens.append(file)
     return non_hiddens
+
 
 def file_exists(file: str, command: str):
     '''Tarkistaa, löytyykö tiedostoa
